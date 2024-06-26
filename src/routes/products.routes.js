@@ -4,17 +4,25 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const Products = prisma.product.findMany();
+    const Products = await prisma.product.findMany();
     res.status(200).json(Products);
   } catch (error) {
     res.status(500).json({success: false, message: error.message})
   }
 });
 
-router.get("/:id", (req, res) => {
-  res.send("getting a single product");
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const product = await prisma.product.findFirst({
+      where: {productId: id}
+    });
+    res.status(200).json(product)
+  } catch (error) {
+    res.status(500).json({success: false, message:error.message})
+  }
 });
 
 router.post("/", async (req, res) => {
