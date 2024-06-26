@@ -12,3 +12,13 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model product{
+  prodId String @id @default(uuid())
+  prodName String @map("product_name")
+  prodDescription String @map("product_description")
+  prodCost Decimal @map("product_cost")
+  onoffer Boolean @map("onoffer")
+
+  @@map("products_table")
+}
