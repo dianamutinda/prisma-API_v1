@@ -5,7 +5,12 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.get("/", (req, res) => {
-  res.send("getting all products");
+  try {
+    const Products = prisma.product.findMany();
+    res.status(200).json(Products);
+  } catch (error) {
+    res.status(500).json({success: false, message: error.message})
+  }
 });
 
 router.get("/:id", (req, res) => {
@@ -14,13 +19,14 @@ router.get("/:id", (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { prodName, prodDescription, prodCost, onoffer } = req.body;
+    const { productThumbnail, productTitle,  productDescription, productCost, onOffer } = req.body;
     const newProduct = await prisma.product.create({
       data: {
-        prodName: prodName,
-        prodDescription: prodDescription,
-        prodCost:prodCost,
-        onoffer: onoffer,
+        productThumbnail,
+        productTitle,
+        productDescription,
+        productCost,
+        onOffer
       },
     });
     res.status(201).json(newProduct);
